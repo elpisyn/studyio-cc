@@ -1,0 +1,87 @@
+<!--
+  カテゴリ1ページ分(study_content.json の1要素)の雛形。パターンBでは blocks[] を
+  ビルド時に静的HTMLへ変換する(JS駆動のタブ切替にしない)。見出しの id は
+  question_study_links.json の anchorId から参照されるので変更しないこと。
+  ファイル名はカテゴリの id をそのまま使う(例: id "responsible-ai" → concepts/responsible-ai.html)。
+  ディレクトリはドメインごとに分ける(このファイルは1ドメイン目のconcepts/配下の例)。
+-->
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>{{カテゴリの教材タイトル}} | {{EXAM_LABEL}} 対策</title>
+<link rel="stylesheet" href="../assets/style.css" />
+</head>
+<body data-page="concepts/sample-category.html">
+<header class="site-header">
+  <a href="../index.html" class="logo">{{EXAM_LABEL}}<span>学習教材</span></a>
+  <nav>
+    <a href="../index.html">トップ</a>
+    <a href="../concepts/sample-category.html" class="active">{{DOMAIN1_NAV_LABEL}}</a>
+    <a href="../domain2/sample-category.html">{{DOMAIN2_NAV_LABEL}}</a>
+    <a href="../reference/glossary.html">用語集</a>
+    <a href="../reference/cheatsheet.html">チートシート</a>
+    <a href="../mapping.html">問題&times;資料対応表</a>
+    <a href="../quiz.html">学習モード</a>
+  </nav>
+</header>
+<div class="breadcrumb"><a href="../index.html">トップ</a><span class="sep">/</span>{{ドメイン名}}<span class="sep">/</span>{{カテゴリの教材タイトル}}</div>
+<main>
+
+<div class="hero">
+  <span class="tag">{{ドメイン名}} ({{このドメイン内の何番目}}/{{このドメインの総数}})</span>
+  <h1>{{カテゴリの教材タイトル}}</h1>
+  <p class="subtitle">{{サブタイトル}}</p>
+</div>
+
+<!-- blocks[] の変換ルール:
+     chips      -> ヒーロー直下に <span class="chip">タグ</span> を並べる
+     heading    -> <h2 class="block-heading" id="見出しid">見出し文</h2>(id は変更しない)
+     paragraph  -> <p class="block-paragraph">本文。**太字**は<strong>に変換</strong></p>
+     callout    -> <div class="callout callout-{style}">本文</div>(style: beginner/tip/warn)
+     table      -> <table class="block-table"><thead>...</thead><tbody>...</tbody></table>
+     cardGrid   -> <div class="card-grid" style="--cols:{columns}"><div class="mini"><strong>title</strong><div>body</div></div>...</div>
+     最低でも heading 3〜5個、paragraph+callout 本文合計1500文字以上、table か cardGrid を1つ以上入れる
+     (studyio-cc/reference-html.md の「コンテンツの密度の目安」参照)。 -->
+
+<span class="chip">{{タグ例1}}</span><span class="chip">{{タグ例2}}</span>
+<p class="block-paragraph">{{導入パラグラフ。このページで扱う範囲の全体像を説明する}}</p>
+
+<table class="block-table">
+<thead><tr><th>{{列1}}</th><th>{{列2}}</th><th>{{列3}}</th></tr></thead>
+<tbody>
+<tr><td>{{値}}</td><td>{{値}}</td><td>{{値}}</td></tr>
+</tbody>
+</table>
+
+<h2 class="block-heading" id="sec-1">{{サブセクション見出し1}}</h2>
+<p class="block-paragraph">{{技術的に正確な説明}}</p>
+<div class="callout callout-beginner">{{上の説明を平易な言葉で言い換えたもの}}</div>
+
+<h2 class="block-heading" id="sec-2">{{サブセクション見出し2}}</h2>
+<p class="block-paragraph">{{技術的に正確な説明}}</p>
+<div class="callout callout-warn">{{誤解しやすい注意点}}</div>
+
+<div class="card-grid" style="--cols:2">
+  <div class="mini"><strong>{{観点A}}</strong><div style="font-size:13px; margin-top:4px;">{{説明}}</div></div>
+  <div class="mini"><strong>{{観点B}}</strong><div style="font-size:13px; margin-top:4px;">{{説明}}</div></div>
+</div>
+
+<div class="callout callout-tip"><span class="callout-title">学習のポイント</span>{{試験での頻出パターン・覚え方}}</div>
+
+<h2 class="related-heading">次に読むページ</h2>
+<div class="grid grid-2">
+  <a href="../concepts/another-category.html" class="tile" data-href="concepts/another-category.html"><div class="tile-check">&check;</div><div class="tile-title">{{関連カテゴリ名}}</div><div class="tile-desc">{{短いタグ}}</div></a>
+  <a href="../domain2/related-category.html" class="tile" data-href="domain2/related-category.html"><div class="tile-check">&check;</div><div class="tile-title">{{対応する実装側カテゴリ名}}</div><div class="tile-desc">{{短いタグ}}</div></a>
+</div>
+
+</main>
+<footer class="site-footer">
+  {{EXAM_LABEL}} 学習教材 · {{出典・注意事項を一言}}。詳細は <a href="../SOURCES.md">SOURCES.md</a> を参照。<br>
+  ローカル配布用: フォルダをそのまま渡し、<span class="mono">index.html</span> をブラウザで開く。<br>
+  教材{{教材ページ総数}}ページ / クイズ{{クイズ総数}}問 / 用語{{用語数}}語
+</footer>
+<script src="../assets/main.js"></script>
+</body>
+</html>

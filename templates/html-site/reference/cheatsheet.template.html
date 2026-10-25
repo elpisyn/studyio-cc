@@ -1,0 +1,69 @@
+<!--
+  チートシートの雛形。原則・パラメータ・判断軸など「表にしやすい」情報を、既存の教材・用語集
+  データから抽出して載せる。出典が無い具体的な数値(料金・レート制限等)は創作しないこと
+  (studyio-cc/SKILL.md の方針どおり、確認できていない数値は載せない)。
+-->
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>チートシート | {{EXAM_LABEL}} 対策</title>
+<link rel="stylesheet" href="../assets/style.css" />
+</head>
+<body data-page="reference/cheatsheet.html">
+<header class="site-header">
+  <a href="../index.html" class="logo">{{EXAM_LABEL}}<span>学習教材</span></a>
+  <nav>
+    <a href="../index.html">トップ</a>
+    <a href="../concepts/sample-category.html">{{DOMAIN1_NAV_LABEL}}</a>
+    <a href="../domain2/sample-category.html">{{DOMAIN2_NAV_LABEL}}</a>
+    <a href="../reference/glossary.html">用語集</a>
+    <a href="../reference/cheatsheet.html" class="active">チートシート</a>
+    <a href="../mapping.html">問題&times;資料対応表</a>
+    <a href="../quiz.html">学習モード</a>
+  </nav>
+</header>
+<div class="breadcrumb"><a href="../index.html">トップ</a><span class="sep">/</span>リファレンス<span class="sep">/</span>チートシート</div>
+<main>
+
+<div class="hero">
+  <span class="tag">REFERENCE #2</span>
+  <h1>チートシート — 原則・設定・判断軸</h1>
+  <p class="subtitle">{{出典に関する注意。確認できていない数値は載せていない旨など}}</p>
+</div>
+
+<div class="callout callout-beginner">
+  このページは「試験直前に全体像を思い出すための早見表」です。表の内容を丸暗記するのではなく、各教材ページ本文で理由まで理解したうえで、直前に表だけ見返す使い方がおすすめです。
+</div>
+
+<h2>原則・パラメータ・機能の早見表</h2>
+<div class="cheat-grid">
+  <div class="cheat-card"><h3>{{カード見出し1}}</h3><table>
+    <tr><td>{{項目}}</td><td>{{値・一言説明}}</td></tr>
+  </table></div>
+  <div class="cheat-card accent-blue"><h3>{{カード見出し2}}</h3><table>
+    <tr><td>{{項目}}</td><td>{{値・一言説明}}</td></tr>
+  </table></div>
+  <!-- カードはトピックの数だけ増やす。accent-blue/accent-green/accent-purple で色分けできる -->
+</div>
+
+<h2>「こう聞かれたら、まずこれを疑う」判断表</h2>
+<table class="compare">
+<thead><tr><th>状況・問われ方</th><th>まず検討する概念・機能</th></tr></thead>
+<tbody>
+<tr><td>{{問われ方の例}}</td><td>{{対応する概念・機能と一言理由}}</td></tr>
+</tbody>
+</table>
+
+<div class="callout callout-beginner">
+  この判断表は「こう聞かれたら、まずこれを疑う」という考え方の整理です。実際の問題文には条件が付くことが多いので、表の答えを丸暗記するのではなく、なぜその答えになるかを各教材ページで理解しておくと、ひねった問題にも対応できます。
+</div>
+
+</main>
+<footer class="site-footer">
+  {{EXAM_LABEL}} 学習教材 · {{出典・注意事項を一言}}。詳細は <a href="../SOURCES.md">SOURCES.md</a> を参照。
+</footer>
+<script src="../assets/main.js"></script>
+</body>
+</html>

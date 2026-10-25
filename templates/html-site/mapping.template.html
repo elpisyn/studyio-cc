@@ -1,0 +1,92 @@
+<!--
+  問題×資料対応表の雛形。quiz_data.json を category 別にグルーピングし、num順に並べる。
+  各問題の pills は question_study_links.json の該当エントリから生成する(実URL + #見出しid)。
+  左の map-rail 内のカテゴリ一覧リンクは #exg-{study_content.jsonのid} を指す。
+-->
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>問題×資料対応表 | {{EXAM_LABEL}} 対策</title>
+<link rel="stylesheet" href="assets/style.css" />
+</head>
+<body data-page="mapping.html">
+<header class="site-header">
+  <a href="index.html" class="logo">{{EXAM_LABEL}}<span>学習教材</span></a>
+  <nav>
+    <a href="index.html">トップ</a>
+    <a href="concepts/sample-category.html">{{DOMAIN1_NAV_LABEL}}</a>
+    <a href="domain2/sample-category.html">{{DOMAIN2_NAV_LABEL}}</a>
+    <a href="reference/glossary.html">用語集</a>
+    <a href="reference/cheatsheet.html">チートシート</a>
+    <a href="mapping.html" class="active">問題&times;資料対応表</a>
+    <a href="quiz.html">学習モード</a>
+  </nav>
+</header>
+<div class="breadcrumb"><a href="index.html">トップ</a><span class="sep">/</span>問題&times;資料対応表</div>
+<main>
+
+<div class="map-page">
+<aside class="map-rail">
+  <h1>問題&times;資料<br>対応表</h1>
+  <p class="lede">出題順(num)に並べた索引。各問題の「関連教材」リンクをクリックすると該当ページの該当見出しへ直接ジャンプする。</p>
+  <div class="map-stats">
+    <div class="map-stat"><div class="n">{{クイズ総数}}</div><div class="l">問題数</div></div>
+    <div class="map-stat"><div class="n">{{カテゴリ総数}}</div><div class="l">カテゴリ</div></div>
+  </div>
+  <input id="map-search" class="glossary-search" placeholder="トピックで検索...">
+  <div style="display:flex; flex-direction:column; gap:6px;">
+    <a href="#exg-sample-category" style="font-size:12px; color:var(--accent); text-decoration:none;">{{カテゴリ名}}</a>
+    <!-- カテゴリ数だけ繰り返す -->
+  </div>
+</aside>
+<div class="content">
+
+<!-- カテゴリごとに1つの exgroup を繰り返す -->
+<div class="exgroup" id="exg-sample-category">
+  <div class="exgroup-head"><h2>{{カテゴリ名}}</h2><span class="exgroup-meta">{{ドメイン名}} &middot; {{このカテゴリの問題数}}問</span></div>
+  <div class="qlist">
+    <!-- 問題ごとに1つの qcard を繰り返す。data-topic は検索対象(小文字・ひらがな等の表記ゆれに注意)。 -->
+    <div class="qcard" data-topic="{{問題のtopicを小文字化したもの}}">
+      <div class="qcard-head">
+        <span class="qnum">#{{num}}</span>
+        <p class="qtopic">{{topic}}</p>
+        <!-- multi: true の問題にだけ付与 -->
+        <span class="badge">複数選択</span>
+      </div>
+      <div class="pills">
+        <!-- links[] の件数だけ繰り返す。hrefは quiz.html の pageUrls と同じ考え方で、mapping.html からの相対パスにする -->
+        <a class="pill" href="concepts/sample-category.html#sec-1">{{headingText}}</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+</div>
+
+</main>
+<footer class="site-footer">
+  {{EXAM_LABEL}} 学習教材 · {{出典・注意事項を一言}}。詳細は <a href="SOURCES.md">SOURCES.md</a> を参照。
+</footer>
+<script src="assets/main.js"></script>
+<script>
+(function(){
+  const input = document.getElementById('map-search');
+  if(!input) return;
+  input.addEventListener('input', () => {
+    const q = input.value.trim().toLowerCase();
+    document.querySelectorAll('.qcard').forEach((el) => {
+      const hit = !q || (el.dataset.topic || '').includes(q);
+      el.classList.toggle('is-hidden', !hit);
+    });
+    document.querySelectorAll('.exgroup').forEach((sec) => {
+      const any = sec.querySelectorAll('.qcard:not(.is-hidden)').length > 0;
+      sec.style.display = any ? '' : 'none';
+    });
+  });
+})();
+</script>
+</body>
+</html>

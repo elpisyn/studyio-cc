@@ -1,0 +1,100 @@
+<!--
+  マルチページ構成(パターンB)のトップページ雛形。コメントで示した箇所をカテゴリ数・ドメイン数に応じて
+  繰り返し生成すること。ナビ(<nav>の中身)はこのサイトの全ページで完全に同一のHTMLにする
+  (各ページのテンプレートでコピーし、activeクラスだけ現在ページに付け替える)。
+-->
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>{{EXAM_LABEL}} 学習教材 — トップ</title>
+<link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+<header class="site-header">
+  <a href="index.html" class="logo">{{EXAM_LABEL}}<span>学習教材</span></a>
+  <nav>
+    <a href="index.html" class="active">トップ</a>
+    <!-- ドメイン・カテゴリごとに代表1ページへのリンクを1つ置く(全カテゴリを並べない。多すぎるとナビが崩れる) -->
+    <a href="concepts/sample-category.html">{{DOMAIN1_NAV_LABEL}}</a>
+    <a href="domain2/sample-category.html">{{DOMAIN2_NAV_LABEL}}</a>
+    <a href="reference/glossary.html">用語集</a>
+    <a href="reference/cheatsheet.html">チートシート</a>
+    <a href="mapping.html">問題&times;資料対応表</a>
+    <a href="quiz.html">学習モード</a>
+  </nav>
+</header>
+<main>
+
+<div class="hero">
+  <span class="tag">{{資格の正式名称・認定プログラム名}}</span>
+  <h1>{{EXAM_LABEL}} 学習教材</h1>
+  <p class="subtitle">{{試験の一言説明。何を中心に・どのドメイン構成で対策する教材かを書く}}</p>
+</div>
+
+<div class="callout callout-tip">
+  <span class="callout-title">この教材の使い方</span>
+  <ol style="margin:6px 0">
+    <li><b>初回はドメイン順に通読</b>(訪問済みタイルにチェックが付く)</li>
+    <li>問題演習で分からない用語が出たら<b>用語集</b>で即引き</li>
+    <li>試験直前は<b>チートシート</b>で原則・判断軸を確認</li>
+    <li>各ページ末尾の<b>「次に読むページ」</b>で関連トピックを辿る</li>
+    <li><b>学習モード</b>でクイズを1問ずつ演習、<b>問題×資料対応表</b>で苦手分野の教材へジャンプ</li>
+  </ol>
+</div>
+
+<h2>あなたの学習進捗</h2>
+<div class="progress-bar"><div class="progress-bar-fill" style="width:0%"></div></div>
+<p class="progress-label">0 / {{教材ページ総数}} 学習済み (0%)</p>
+<p><button id="reset-progress">進捗をリセット</button></p>
+
+<h2>リファレンス</h2>
+<div class="grid grid-2">
+  <a href="reference/glossary.html" class="tile" data-href="reference/glossary.html"><div class="tile-check">&check;</div><div class="tile-title">用語集 (Glossary)</div><div class="tile-desc">{{用語数}}語を試験頻出カテゴリ別に整理</div></a>
+  <a href="reference/cheatsheet.html" class="tile" data-href="reference/cheatsheet.html"><div class="tile-check">&check;</div><div class="tile-title">チートシート</div><div class="tile-desc">原則一覧・判断表で試験直前に見返す</div></a>
+</div>
+
+<!-- ドメインごとに1セクション(h2+p+タイルgrid)を繰り返す。tile 1つ = study_content.json の1ページ。
+     grid-2/grid-3/grid-4 はカテゴリ数に応じて選ぶ(3〜4列が収まりやすい)。
+     ディレクトリ名はドメインごとに分ける(例: concepts/ と foundry/、または domain1/ と domain2/)。 -->
+<h2>{{ドメイン名}}({{配点比率}}, {{カテゴリ数}}ページ)</h2>
+<p class="text-muted" style="color:var(--sub); font-size:13px;">{{このドメインが扱う範囲の一言説明}}</p>
+<div class="grid grid-3">
+  <a href="concepts/sample-category.html" class="tile" data-href="concepts/sample-category.html"><div class="tile-check">&check;</div><div class="tile-title">{{カテゴリの教材タイトル}}</div><div class="tile-desc">{{短いタグ}}</div></a>
+  <!-- 同じ形のタイルをカテゴリ数だけ繰り返す -->
+</div>
+
+<h2>{{ドメイン2の名前}}({{配点比率}}, {{カテゴリ数}}ページ)</h2>
+<p class="text-muted" style="color:var(--sub); font-size:13px;">{{このドメインが扱う範囲の一言説明}}</p>
+<div class="grid grid-2">
+  <a href="domain2/sample-category.html" class="tile" data-href="domain2/sample-category.html"><div class="tile-check">&check;</div><div class="tile-title">{{カテゴリの教材タイトル}}</div><div class="tile-desc">{{短いタグ}}</div></a>
+</div>
+
+<!-- 試験全体マップ: ドメイン・カテゴリ・ファイルの対応が一目で分かる表。SVG図は必須ではない。 -->
+<h2>試験全体マップ</h2>
+<table class="exammap">
+<thead><tr><th>教材ページ</th><th>出題ドメイン</th><th>ファイル</th></tr></thead>
+<tbody>
+<tr><td>{{カテゴリの教材タイトル}}</td><td>{{ドメイン名}}({{配点比率}}）</td><td><a href="concepts/sample-category.html">concepts/sample-category.html</a></td></tr>
+<!-- 全カテゴリ分、行を繰り返す -->
+</tbody>
+</table>
+
+<h2>学習の進め方 4つのポイント</h2>
+<div class="grid grid-2">
+  <div class="card"><h3>{{ポイント1の見出し}}</h3><p style="font-size:13px; color:#374151;">{{本文}}</p></div>
+  <div class="card"><h3>{{ポイント2の見出し}}</h3><p style="font-size:13px; color:#374151;">{{本文}}</p></div>
+  <div class="card"><h3>{{ポイント3の見出し}}</h3><p style="font-size:13px; color:#374151;">{{本文}}</p></div>
+  <div class="card"><h3>{{ポイント4の見出し}}</h3><p style="font-size:13px; color:#374151;">{{本文}}</p></div>
+</div>
+
+</main>
+<footer class="site-footer">
+  {{EXAM_LABEL}} 学習教材 · {{出典・注意事項を一言(例: 試験の退役・後継情報、公式ガイドでの要確認など)}}。詳細は <a href="SOURCES.md">SOURCES.md</a> を参照。<br>
+  ローカル配布用: フォルダをそのまま渡し、<span class="mono">index.html</span> をブラウザで開く。<br>
+  教材{{教材ページ総数}}ページ / クイズ{{クイズ総数}}問 / 用語{{用語数}}語
+</footer>
+<script src="assets/main.js"></script>
+</body>
+</html>

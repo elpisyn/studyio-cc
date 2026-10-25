@@ -1,0 +1,179 @@
+<!--
+  学習モード(クイズ)専用ページの雛形。quiz_data.json 全問をそのままこのページに埋め込み、
+  1問ずつ出題する。「関連教材」リンクは(パターンAと違い)ページ内スクロールではなく
+  実ファイルURL(例: concepts/responsible-ai.html#sec-1)に解決する。
+  pageUrls はカテゴリ(study_content.jsonのid) → このページから見た相対URL のマップ。
+  生成時に全カテゴリ分を埋めること(埋め漏れがあるとジャンプリンクが壊れる)。
+-->
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>学習モード(クイズ) | {{EXAM_LABEL}} 対策</title>
+<link rel="stylesheet" href="assets/style.css" />
+</head>
+<body data-page="quiz.html">
+<header class="site-header">
+  <a href="index.html" class="logo">{{EXAM_LABEL}}<span>学習教材</span></a>
+  <nav>
+    <a href="index.html">トップ</a>
+    <a href="concepts/sample-category.html">{{DOMAIN1_NAV_LABEL}}</a>
+    <a href="domain2/sample-category.html">{{DOMAIN2_NAV_LABEL}}</a>
+    <a href="reference/glossary.html">用語集</a>
+    <a href="reference/cheatsheet.html">チートシート</a>
+    <a href="mapping.html">問題&times;資料対応表</a>
+    <a href="quiz.html" class="active">学習モード</a>
+  </nav>
+</header>
+<div class="breadcrumb"><a href="index.html">トップ</a><span class="sep">/</span>学習モード</div>
+<main>
+
+<div class="hero">
+  <span class="tag">学習モード</span>
+  <h1>クイズで演習</h1>
+  <p class="subtitle">全{{クイズ総数}}問。選択肢の並び順は毎回ランダム化される。正誤と解説を確認したら「次へ」で進む。</p>
+</div>
+
+<div class="progress-bar"><div class="progress-bar-fill" style="width:0%"></div></div>
+<div class="quiz-progress" id="quiz-progress-label"></div>
+<div id="quiz-root"></div>
+
+</main>
+<footer class="site-footer">
+  {{EXAM_LABEL}} 学習教材 · {{出典・注意事項を一言}}。詳細は <a href="SOURCES.md">SOURCES.md</a> を参照。
+</footer>
+<script src="assets/main.js"></script>
+
+<script type="application/json" id="data-quiz">
+[
+  {
+    "num": 1,
+    "topic": "サンプル論点",
+    "question": "ここに問題文を書く。",
+    "multi": false,
+    "nCorrect": 1,
+    "choices": [
+      { "text": "選択肢A", "correct": false, "explanation": "なぜ不正解かを具体的に(60字以上目安)" },
+      { "text": "選択肢B", "correct": true, "explanation": "なぜ正解かを具体的に(60字以上目安)" },
+      { "text": "選択肢C", "correct": false, "explanation": "なぜ不正解かを具体的に(60字以上目安)" }
+    ],
+    "concepts": [{ "title": "関連概念", "body": "深掘りする説明", "bodySimple": "一言版" }],
+    "category": "サンプルカテゴリ"
+  }
+]
+</script>
+<!-- pageId(study_content.jsonのid) -> quiz.htmlから見た相対URLのマップ。全カテゴリ分埋める。 -->
+<script type="application/json" id="data-page-urls">
+{
+  "sample-category": "concepts/sample-category.html",
+  "another-category": "domain2/related-category.html"
+}
+</script>
+<!-- quiz_data.json の num -> links(pageId/anchorId)。reference-ios.md の question_study_links.json と同じ形。 -->
+<script type="application/json" id="data-links">
+[
+  { "num": 1, "links": [{ "pageId": "sample-category", "headingText": "最初の見出し", "anchorId": "sec-1" }] }
+]
+</script>
+
+<script>
+(function(){
+  const quizData = JSON.parse(document.getElementById('data-quiz').textContent);
+  const pageUrls = JSON.parse(document.getElementById('data-page-urls').textContent);
+  const linksData = JSON.parse(document.getElementById('data-links').textContent);
+  const linksByNum = Object.fromEntries(linksData.map(l => [l.num, l.links]));
+
+  let quizIndex = 0;
+  let answeredCount = 0;
+  let correctCount = 0;
+  const root = document.getElementById('quiz-root');
+
+  function shuffleChoices(choices){
+    const arr = choices.slice();
+    for(let i = arr.length - 1; i > 0; i--){
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
+
+  function updateProgress(){
+    const bar = document.querySelector('.progress-bar-fill');
+    const label = document.getElementById('quiz-progress-label');
+    const pct = Math.round(((quizIndex) / quizData.length) * 100);
+    if(bar) bar.style.width = pct + '%';
+    if(label) label.textContent = `第${quizIndex+1}問 / 全${quizData.length}問 ・ 正答 ${correctCount}/${answeredCount}`;
+  }
+
+  function render(){
+    const q = quizData[quizIndex];
+    updateProgress();
+    if(!q){ root.innerHTML = '<div class="card">問題はありません。</div>'; return; }
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <div class="quiz-meta">第${q.num}問 ／ ${q.category || ''}${q.multi ? ' ／ 複数選択' : ''}</div>
+      <div style="font-size:15px; margin-bottom:14px;">${escapeHtml(q.question)}</div>
+      <div class="choices"></div>
+      <div class="quiz-actions">
+        <button class="prev">前へ</button>
+        <button class="next">次へ</button>
+      </div>
+    `;
+    const choicesEl = card.querySelector('.choices');
+    let answered = false;
+    const shuffled = shuffleChoices(q.choices);
+    shuffled.forEach((c) => {
+      const b = document.createElement('button');
+      b.className = 'choice';
+      b.textContent = c.text;
+      b.addEventListener('click', () => {
+        if(answered) return;
+        answered = true;
+        answeredCount++;
+        if(c.correct) correctCount++;
+        choicesEl.querySelectorAll('.choice').forEach((el, i) => {
+          el.classList.add(shuffled[i].correct ? 'correct' : 'incorrect');
+          const ex = document.createElement('div');
+          ex.className = 'explanation';
+          ex.textContent = shuffled[i].explanation || '';
+          el.after(ex);
+        });
+        (q.concepts || []).forEach(cpt => {
+          const box = document.createElement('div');
+          box.className = 'callout callout-tip';
+          box.innerHTML = `<span class="callout-title">${escapeHtml(cpt.title)}</span>${escapeHtml(cpt.body)}`;
+          choicesEl.after(box);
+        });
+        const links = linksByNum[q.num];
+        if(links && links.length){
+          links.forEach(l => {
+            const url = pageUrls[l.pageId];
+            if(!url) return; // pageUrls に未登録のpageIdはリンクを出さない(壊れたリンクを作らない)
+            const a = document.createElement('a');
+            a.className = 'jump-link';
+            a.href = l.anchorId ? `${url}#${l.anchorId}` : url;
+            a.textContent = '関連教材: ' + l.headingText + ' へ →';
+            choicesEl.after(a);
+          });
+        }
+        updateProgress();
+      });
+      choicesEl.appendChild(b);
+    });
+    card.querySelector('.prev').addEventListener('click', () => { quizIndex = Math.max(0, quizIndex - 1); render(); });
+    card.querySelector('.next').addEventListener('click', () => { quizIndex = Math.min(quizData.length - 1, quizIndex + 1); render(); });
+    root.innerHTML = '';
+    root.appendChild(card);
+  }
+
+  function escapeHtml(s){
+    return String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  render();
+})();
+</script>
+</body>
+</html>
