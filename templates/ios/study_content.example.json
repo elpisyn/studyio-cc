@@ -1,0 +1,23 @@
+[
+  {
+    "id": "sample-page-1",
+    "category": "concepts",
+    "tag": "基礎",
+    "title": "ページタイトルの例",
+    "subtitle": "サブタイトルの例",
+    "order": 1,
+    "blocks": [
+      { "type": "chips", "items": [
+        { "text": "タグA", "color": "blue" },
+        { "text": "タグB", "color": "green" }
+      ] },
+      { "type": "heading", "level": 2, "text": "最初の見出し", "id": "sec-1" },
+      { "type": "paragraph", "text": "本文テキスト。**太字**のような簡易装飾が使える。" },
+      { "type": "heading", "level": 2, "text": "比較表を出したいとき", "id": "sec-2" },
+      { "type": "cardGrid", "columns": 2, "cards": [
+        { "title": "観点A", "body": "説明文" },
+        { "title": "観点B", "body": "説明文" }
+      ] }
+    ]
+  }
+]

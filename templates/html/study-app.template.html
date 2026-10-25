@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>学習アプリ(サンプル資格名)</title>
+<style>
+  :root{
+    --bg:#f7f8fa; --card:#ffffff; --line:#e3e6ec; --ink:#1f2430; --sub:#6b7280;
+    --accent:#0a66c2; --accent-soft:#e8f1fb; --good:#1a7f37; --bad:#c62828;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans",sans-serif; background:var(--bg); color:var(--ink);}
+  header{padding:20px 24px; border-bottom:1px solid var(--line); background:var(--card);}
+  header h1{margin:0; font-size:18px;}
+  nav{display:flex; gap:8px; padding:12px 24px; background:var(--card); border-bottom:1px solid var(--line);}
+  nav button{appearance:none; border:1px solid var(--line); background:var(--bg); color:var(--ink);
+    padding:8px 16px; border-radius:8px; font-size:14px; cursor:pointer;}
+  nav button.active{background:var(--accent); color:#fff; border-color:var(--accent);}
+  main{max-width:720px; margin:0 auto; padding:24px;}
+  .tab{display:none;}
+  .tab.active{display:block;}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:20px; margin-bottom:16px;}
+  .choice{display:block; width:100%; text-align:left; padding:12px 14px; margin-bottom:8px;
+    border:1px solid var(--line); border-radius:8px; background:var(--bg); cursor:pointer; font-size:14px;}
+  .choice.correct{border-color:var(--good); background:#eaf7ee;}
+  .choice.incorrect{border-color:var(--bad); background:#fdecea;}
+  .explanation{font-size:13px; color:var(--sub); margin-top:4px; padding-left:4px;}
+  .quiz-meta{font-size:12px; color:var(--sub); margin-bottom:8px;}
+  .quiz-actions{display:flex; gap:8px; margin-top:16px;}
+  .quiz-actions button{padding:8px 16px; border-radius:8px; border:1px solid var(--line); background:var(--bg); cursor:pointer;}
+  .chip{display:inline-block; font-size:12px; padding:2px 10px; border-radius:999px; background:var(--accent-soft); color:var(--accent); margin-right:6px;}
+  h2.block-heading{font-size:17px; margin:24px 0 8px;}
+  p.block-paragraph{font-size:14px; line-height:1.7; color:#374151;}
+  .card-grid{display:grid; grid-template-columns:repeat(var(--cols,2), 1fr); gap:12px;}
+  .card-grid .mini{border:1px solid var(--line); border-radius:10px; padding:12px; background:var(--bg);}
+  .glossary-search{width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:8px; margin-bottom:16px; font-size:14px;}
+  .glossary-item dt{font-weight:600; font-size:14px;}
+  .glossary-item dd{margin:2px 0 14px; font-size:13px; color:var(--sub);}
+  .jump-link{font-size:12px; color:var(--accent); cursor:pointer; text-decoration:underline; background:none; border:none; padding:0;}
+</style>
+</head>
+<body>
+<header><h1>学習アプリ(サンプル資格名)</h1></header>
+<nav>
+  <button data-tab="quiz" class="active">クイズ</button>
+  <button data-tab="study">教材</button>
+  <button data-tab="glossary">用語集</button>
+</nav>
+<main>
+  <section id="tab-quiz" class="tab active"></section>
+  <section id="tab-study" class="tab"></section>
+  <section id="tab-glossary" class="tab"></section>
+</main>
+
+<!-- 生成したコンテンツに置き換える。構造は reference-ios.md と同一。 -->
+<script type="application/json" id="data-quiz">
+[
+  {
+    "num": 1,
+    "topic": "サンプル論点",
+    "question": "ここに問題文を書く。",
+    "multi": false,
+    "nCorrect": 1,
+    "choices": [
+      { "text": "不正解の選択肢A", "correct": false, "explanation": "不正解の理由" },
+      { "text": "正解の選択肢B", "correct": true, "explanation": "正解の理由" }
+    ],
+    "concepts": [],
+    "category": "サンプルカテゴリ"
+  }
+]
+</script>
+<script type="application/json" id="data-study">
+[
+  {
+    "id": "sample-page-1",
+    "category": "concepts",
+    "tag": "基礎",
+    "title": "ページタイトルの例",
+    "subtitle": "サブタイトルの例",
+    "order": 1,
+    "blocks": [
+      { "type": "chips", "items": [{ "text": "タグA", "color": "blue" }] },
+      { "type": "heading", "level": 2, "text": "最初の見出し", "id": "sec-1" },
+      { "type": "paragraph", "text": "本文テキスト。" },
+      { "type": "cardGrid", "columns": 2, "cards": [{ "title": "観点A", "body": "説明文" }] }
+    ]
+  }
+]
+</script>
+<script type="application/json" id="data-glossary">
+[
+  { "id": "サンプル用語", "term": "サンプル用語", "aliases": ["Sample Term"], "definition": "定義文。", "category": "サンプルカテゴリ" }
+]
+</script>
+<script type="application/json" id="data-links">
+[
+  { "num": 1, "links": [{ "pageId": "sample-page-1", "headingText": "最初の見出し", "anchorId": "sec-1" }] }
+]
+</script>
+
+<script>
+(function(){
+  const quizData = JSON.parse(document.getElementById('data-quiz').textContent);
+  const studyData = JSON.parse(document.getElementById('data-study').textContent);
+  const glossaryData = JSON.parse(document.getElementById('data-glossary').textContent);
+  const linksData = JSON.parse(document.getElementById('data-links').textContent);
+  const linksByNum = Object.fromEntries(linksData.map(l => [l.num, l.links]));
+
+  // --- tab switching ---
+  document.querySelectorAll('nav button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    });
+  });
+
+  // --- quiz ---
+  let quizIndex = 0;
+  const quizEl = document.getElementById('tab-quiz');
+  function renderQuiz(){
+    const q = quizData[quizIndex];
+    if(!q){ quizEl.innerHTML = '<div class="card">問題はありません。</div>'; return; }
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <div class="quiz-meta">第${q.num}問 ／ ${q.category || ''}${q.multi ? ' ／ 複数選択' : ''}</div>
+      <div style="font-size:15px; margin-bottom:14px;">${escapeHtml(q.question)}</div>
+      <div class="choices"></div>
+      <div class="quiz-actions">
+        <button class="prev">前へ</button>
+        <button class="next">次へ</button>
+      </div>
+    `;
+    const choicesEl = card.querySelector('.choices');
+    let answered = false;
+    q.choices.forEach((c) => {
+      const b = document.createElement('button');
+      b.className = 'choice';
+      b.textContent = c.text;
+      b.addEventListener('click', () => {
+        if(answered) return;
+        answered = true;
+        choicesEl.querySelectorAll('.choice').forEach((el, i) => {
+          el.classList.add(q.choices[i].correct ? 'correct' : 'incorrect');
+          const ex = document.createElement('div');
+          ex.className = 'explanation';
+          ex.textContent = q.choices[i].explanation || '';
+          el.after(ex);
+        });
+        const links = linksByNum[q.num];
+        if(links && links.length){
+          const jump = document.createElement('div');
+          jump.style.marginTop = '12px';
+          links.forEach(l => {
+            const a = document.createElement('button');
+            a.className = 'jump-link';
+            a.textContent = '関連教材: ' + l.headingText + ' へ →';
+            a.addEventListener('click', () => jumpToStudy(l.pageId, l.anchorId));
+            jump.appendChild(a);
+          });
+          choicesEl.after(jump);
+        }
+      });
+      choicesEl.appendChild(b);
+    });
+    card.querySelector('.prev').addEventListener('click', () => { quizIndex = Math.max(0, quizIndex - 1); renderQuiz(); });
+    card.querySelector('.next').addEventListener('click', () => { quizIndex = Math.min(quizData.length - 1, quizIndex + 1); renderQuiz(); });
+    quizEl.innerHTML = '';
+    quizEl.appendChild(card);
+  }
+
+  // --- study ---
+  const studyEl = document.getElementById('tab-study');
+  function renderStudy(){
+    studyEl.innerHTML = '';
+    [...studyData].sort((a,b) => a.order - b.order).forEach(page => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.id = 'study-' + page.id;
+      let html = `<div class="chip">${escapeHtml(page.tag || page.category || '')}</div>
+        <h2 style="margin:10px 0 2px;">${escapeHtml(page.title)}</h2>
+        <div style="color:var(--sub); font-size:13px; margin-bottom:10px;">${escapeHtml(page.subtitle || '')}</div>`;
+      page.blocks.forEach(block => {
+        if(block.type === 'chips'){
+          html += block.items.map(i => `<span class="chip">${escapeHtml(i.text)}</span>`).join(' ');
+        } else if(block.type === 'heading'){
+          html += `<h${block.level || 2} class="block-heading" id="${block.id || ''}">${escapeHtml(block.text)}</h${block.level || 2}>`;
+        } else if(block.type === 'paragraph'){
+          html += `<p class="block-paragraph">${escapeHtml(block.text).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')}</p>`;
+        } else if(block.type === 'cardGrid'){
+          html += `<div class="card-grid" style="--cols:${block.columns || 2}">` +
+            block.cards.map(c => `<div class="mini"><strong>${escapeHtml(c.title)}</strong><div style="font-size:13px; margin-top:4px;">${escapeHtml(c.body)}</div></div>`).join('') +
+            `</div>`;
+        }
+      });
+      card.innerHTML = html;
+      studyEl.appendChild(card);
+    });
+  }
+  function jumpToStudy(pageId, anchorId){
+    document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelector('nav button[data-tab="study"]').classList.add('active');
+    document.getElementById('tab-study').classList.add('active');
+    const target = anchorId ? document.getElementById(anchorId) : document.getElementById('study-' + pageId);
+    if(target) target.scrollIntoView({behavior:'smooth', block:'start'});
+  }
+
+  // --- glossary ---
+  const glossaryEl = document.getElementById('tab-glossary');
+  function renderGlossary(filter){
+    const q = (filter || '').trim().toLowerCase();
+    const list = glossaryData.filter(g => {
+      if(!q) return true;
+      return g.term.toLowerCase().includes(q) || (g.aliases || []).some(a => a.toLowerCase().includes(q));
+    });
+    const dl = document.createElement('dl');
+    list.forEach(g => {
+      const item = document.createElement('div');
+      item.className = 'glossary-item';
+      item.innerHTML = `<dt>${escapeHtml(g.term)}</dt><dd>${escapeHtml(g.definition)}</dd>`;
+      dl.appendChild(item);
+    });
+    const existing = glossaryEl.querySelector('dl');
+    if(existing) existing.remove();
+    glossaryEl.appendChild(dl);
+  }
+  function setupGlossary(){
+    glossaryEl.innerHTML = '<input class="glossary-search" placeholder="用語を検索...">';
+    glossaryEl.querySelector('input').addEventListener('input', (e) => renderGlossary(e.target.value));
+    renderGlossary('');
+  }
+
+  function escapeHtml(s){
+    return String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  renderQuiz();
+  renderStudy();
+  setupGlossary();
+})();
+</script>
+</body>
+</html>

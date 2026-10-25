@@ -1,0 +1,33 @@
+[
+  {
+    "num": 1,
+    "topic": "サンプル論点(ここに問題の要点を一言で)",
+    "question": "ここに問題文を書く。",
+    "multi": false,
+    "nCorrect": 1,
+    "choices": [
+      { "text": "不正解の選択肢A", "correct": false, "explanation": "なぜ不正解かの説明" },
+      { "text": "正解の選択肢B", "correct": true, "explanation": "なぜ正解かの説明" },
+      { "text": "不正解の選択肢C", "correct": false, "explanation": "なぜ不正解かの説明" },
+      { "text": "不正解の選択肢D", "correct": false, "explanation": "なぜ不正解かの説明" }
+    ],
+    "concepts": [
+      { "title": "関連する用語・概念名", "body": "詳しい説明", "bodySimple": "一言版の説明" }
+    ],
+    "category": "サンプルカテゴリ"
+  },
+  {
+    "num": 2,
+    "topic": "複数選択の例",
+    "question": "複数選択の問題文をここに書く。",
+    "multi": true,
+    "nCorrect": 2,
+    "choices": [
+      { "text": "正解の選択肢A", "correct": true, "explanation": "正解の理由" },
+      { "text": "正解の選択肢B", "correct": true, "explanation": "正解の理由" },
+      { "text": "不正解の選択肢C", "correct": false, "explanation": "不正解の理由" }
+    ],
+    "concepts": [],
+    "category": "サンプルカテゴリ"
+  }
+]

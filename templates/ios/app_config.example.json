@@ -1,0 +1,11 @@
+{
+  "examLabel": "サンプル資格名",
+  "theme": {
+    "accentLight": "#0a66c2",
+    "accentDark": "#4da3ff",
+    "accentInkLight": "#06396e",
+    "accentInkDark": "#cfe6ff",
+    "accentSoftLight": "#e8f1fb",
+    "accentSoftDark": "#13263a"
+  }
+}

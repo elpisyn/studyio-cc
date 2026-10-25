@@ -1,0 +1,14 @@
+[
+  {
+    "num": 1,
+    "links": [
+      { "pageId": "sample-page-1", "headingText": "最初の見出し", "anchorId": "sec-1" }
+    ]
+  },
+  {
+    "num": 2,
+    "links": [
+      { "pageId": "sample-page-1", "headingText": "比較表を出したいとき", "anchorId": "sec-2" }
+    ]
+  }
+]
